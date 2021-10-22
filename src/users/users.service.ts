@@ -6,6 +6,7 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateUserDto } from './dtos/create-user.dto';
+import { FindUsersQueryDto } from './dtos/find-users-query.dto';
 import { UpdateUserDto } from './dtos/update-user.dto';
 import { UserRole } from './user-roles.enum';
 import { User } from './user.entity';
@@ -64,5 +65,12 @@ export class UsersService {
         'Não foi encontrado um usuário com o ID informado',
       );
     }
+  }
+
+  async findUsers(
+    queryDto: FindUsersQueryDto,
+  ): Promise<{ users: User[]; total: number }> {
+    const users = await this.userRepository.findUsers(queryDto);
+    return users;
   }
 }

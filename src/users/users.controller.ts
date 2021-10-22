@@ -7,11 +7,16 @@ import {
   Param,
   Patch,
   Post,
+  Query,
+  UseGuards,
   ValidationPipe,
 } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from 'src/auth/get-user.decorator';
 import { Role } from 'src/auth/role.decorator';
+import { RolesGuard } from 'src/auth/roles.guard';
 import { CreateUserDto } from './dtos/create-user.dto';
+import { FindUsersQueryDto } from './dtos/find-users-query.dto';
 import { ReturnUserDto } from './dtos/return-user.dto';
 import { UpdateUserDto } from './dtos/update-user.dto';
 import { UserRole } from './user-roles.enum';
@@ -19,10 +24,12 @@ import { User } from './user.entity';
 import { UsersService } from './users.service';
 
 @Controller('users')
+@UseGuards(AuthGuard(), RolesGuard)
 export class UsersController {
   constructor(private usersService: UsersService) {}
 
   @Post()
+  @Role(UserRole.ADMIN)
   async createAdminUser(
     @Body(ValidationPipe) createUserDto: CreateUserDto,
   ): Promise<ReturnUserDto> {
@@ -64,6 +71,17 @@ export class UsersController {
     await this.usersService.deleteUser(id);
     return {
       message: 'Usuário removido com sucesso',
+    };
+  }
+
+  @Get()
+  @Role(UserRole.ADMIN)
+  async findUsers(@Query() query: FindUsersQueryDto) {
+    const found = await this.usersService.findUsers(query);
+
+    return {
+      found,
+      message: 'Usários enconstrados',
     };
   }
 }
