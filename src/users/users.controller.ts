@@ -9,6 +9,7 @@ import {
   Post,
   ValidationPipe,
 } from '@nestjs/common';
+import { GetUser } from 'src/auth/get-user.decorator';
 import { Role } from 'src/auth/role.decorator';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { ReturnUserDto } from './dtos/return-user.dto';
