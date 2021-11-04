@@ -1,4 +1,5 @@
-import { BaseEntity, Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { User } from 'src/users/user.entity';
+import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 
 @Entity()
 export class Game extends BaseEntity {
@@ -14,6 +15,18 @@ export class Game extends BaseEntity {
   @Column({ nullable: false, type: 'varchar', length: 300 })
   bio: string;
 
-  @Column({ nullable: false, length: 200 })
-  ano_lancamento: number;
+  @CreateDateColumn({ nullable: false, type: 'varchar', length: 10 })
+  data_lancamento: string;
+
+  @CreateDateColumn()
+  createdAd: Date;
+
+  @UpdateDateColumn()
+  updatedAd: Date;
+
+  @Column()
+  curtidas: number;
+
+  @ManyToOne(() => User, (user) => user.game)
+  users: User;
 }
